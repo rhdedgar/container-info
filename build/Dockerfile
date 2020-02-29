@@ -10,7 +10,7 @@ ADD scripts/ /usr/local/bin/
 
 RUN dnf install -y golang \
                    gcc \
-                   git \
+                   git && \
     dnf clean all
 
 ENV GOBIN=/bin \
