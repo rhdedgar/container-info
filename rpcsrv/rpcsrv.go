@@ -23,6 +23,7 @@ func (g InfoSrv) GetContainerInfo(containerID *string, reply *[]byte) error {
 	channels.SetStringChan(models.ChrootChan, *containerID)
 	*reply = <-models.ChrootOut
 
+	fmt.Println("reply result was:", string((*reply)[:]))
 	return nil
 }
 
@@ -30,9 +31,10 @@ func (g InfoSrv) GetContainerInfo(containerID *string, reply *[]byte) error {
 func (g InfoSrv) GetRuncInfo(containerID *string, reply *[]byte) error {
 	fmt.Println("Getting runc info for container: ", *containerID)
 
-	channels.SetStringChan(models.ChrootChan, *containerID)
+	channels.SetStringChan(models.RuncChan, *containerID)
 	*reply = <-models.RuncOut
 
+	fmt.Println("runc reply result was:", string((*reply)[:]))
 	return nil
 }
 

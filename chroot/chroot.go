@@ -13,8 +13,6 @@ import (
 var (
 	// Path is the path to the container runtime interface utility
 	Path = "/usr/bin/crictl"
-	// UseDocker if crictl not found
-	UseDocker = false
 )
 
 // SysCmd waits for a container ID via channel input, and gathers information
@@ -28,6 +26,7 @@ func SysCmd(cmdChan, runcChan <-chan string) {
 	for {
 		select {
 		case containerID := <-cmdChan:
+			fmt.Println("running this: ", Path+" inspect "+containerID)
 			cmd := exec.Command(Path, "inspect", containerID)
 
 			var out bytes.Buffer
@@ -37,8 +36,8 @@ func SysCmd(cmdChan, runcChan <-chan string) {
 				fmt.Println("Error running inspect command: ", cErr)
 			}
 
-			//sStr := out.String()
-			//fmt.Println("Command output was", sStr)
+			sStr := out.String()
+			fmt.Println("Command output was", sStr)
 			models.ChrootOut <- out.Bytes()
 
 		case scanContainer := <-runcChan:
@@ -52,8 +51,8 @@ func SysCmd(cmdChan, runcChan <-chan string) {
 				fmt.Println("Error running state command: ", runcErr)
 			}
 
-			//runcStr := runOut.String()
-			//fmt.Println("runc state command output was", runcStr)
+			runcStr := runOut.String()
+			fmt.Println("runc state command output was", runcStr)
 			models.RuncOut <- runOut.Bytes()
 		}
 	}
@@ -63,18 +62,20 @@ func SysCmd(cmdChan, runcChan <-chan string) {
 func chrootPath(chrPath string) (func() error, error) {
 	root, err := os.Open("/")
 	if err != nil {
-		fmt.Println("Error getting root FD", err)
+		fmt.Println("Error getting root FD:", err)
 		return nil, err
 	}
 
 	if err := syscall.Chroot(chrPath); err != nil {
 		root.Close()
+		fmt.Println("Error with chroot syscall:", err)
 		return nil, err
 	}
 
 	return func() error {
 		defer root.Close()
 		if err := root.Chdir(); err != nil {
+			fmt.Println("Error with root Chdir", err)
 			return err
 		}
 		return syscall.Chroot(".")
@@ -85,6 +86,5 @@ func init() {
 	if _, err := os.Stat("/host/usr/bin/crictl"); os.IsNotExist(err) {
 		fmt.Println("Cannot find /host/usr/bin/crictl, using /host/usr/bin/docker")
 		Path = "/usr/bin/docker"
-		UseDocker = true
 	}
 }
