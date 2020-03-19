@@ -18,23 +18,23 @@ type InfoSrv struct {
 
 // GetContainerInfo is the RPC-exported method that returns docker or crictl info about a container.
 func (g InfoSrv) GetContainerInfo(containerID *string, reply *[]byte) error {
-	fmt.Println("Getting info for container: ", *containerID)
+	//fmt.Println("Getting info for container: ", *containerID)
 
 	channels.SetStringChan(models.ChrootChan, *containerID)
 	*reply = <-models.ChrootOut
 
-	fmt.Println("reply result was:", string((*reply)[:]))
+	//fmt.Println("reply result was:", string((*reply)[:]))
 	return nil
 }
 
 // GetRuncInfo is the RPC-exported method that returns runc info about a container.
 func (g InfoSrv) GetRuncInfo(containerID *string, reply *[]byte) error {
-	fmt.Println("Getting runc info for container: ", *containerID)
+	//fmt.Println("Getting runc info for container: ", *containerID)
 
 	channels.SetStringChan(models.RuncChan, *containerID)
 	*reply = <-models.RuncOut
 
-	fmt.Println("runc reply result was:", string((*reply)[:]))
+	//fmt.Println("runc reply result was:", string((*reply)[:]))
 	return nil
 }
 
@@ -55,6 +55,6 @@ func RPCSrv(sock string) {
 		fmt.Println("Error starting listener:", e)
 	}
 
-	fmt.Println("Starting container info server.")
+	//fmt.Println("Starting container info server with address:", sock)
 	http.Serve(l, nil)
 }
