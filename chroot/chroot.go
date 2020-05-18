@@ -18,7 +18,7 @@ var (
 // SysCmd waits for a container ID via channel input, and gathers information
 // about the container when it receives an ID.
 func SysCmd(cmdChan, runcChan <-chan string) {
-	_, err := chrootPath(os.Getenv("CHROOT_PATH"))
+	_, err := ChrootPath(os.Getenv("CHROOT_PATH"))
 	if err != nil {
 		fmt.Println("Error getting chroot on host due to: ", err)
 	}
@@ -58,8 +58,8 @@ func SysCmd(cmdChan, runcChan <-chan string) {
 	}
 }
 
-// Chroot provides chroot access to the mounted host filesystem
-func chrootPath(chrPath string) (func() error, error) {
+// ChrootPath provides chroot access to the mounted host filesystem.
+func ChrootPath(chrPath string) (func() error, error) {
 	root, err := os.Open("/")
 	if err != nil {
 		fmt.Println("Error getting root FD:", err)

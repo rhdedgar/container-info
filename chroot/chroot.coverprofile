@@ -1,0 +1,21 @@
+mode: atomic
+github.com/rhdedgar/container-info/chroot/chroot.go:20.46,22.16 2 0
+github.com/rhdedgar/container-info/chroot/chroot.go:26.2,26.6 1 0
+github.com/rhdedgar/container-info/chroot/chroot.go:22.16,24.3 1 0
+github.com/rhdedgar/container-info/chroot/chroot.go:26.6,27.10 1 0
+github.com/rhdedgar/container-info/chroot/chroot.go:28.33,35.37 4 0
+github.com/rhdedgar/container-info/chroot/chroot.go:41.4,41.35 1 0
+github.com/rhdedgar/container-info/chroot/chroot.go:43.36,50.43 4 0
+github.com/rhdedgar/container-info/chroot/chroot.go:56.4,56.36 1 0
+github.com/rhdedgar/container-info/chroot/chroot.go:35.37,37.5 1 0
+github.com/rhdedgar/container-info/chroot/chroot.go:50.43,52.5 1 0
+github.com/rhdedgar/container-info/chroot/chroot.go:62.55,64.16 2 1
+github.com/rhdedgar/container-info/chroot/chroot.go:69.2,69.48 1 1
+github.com/rhdedgar/container-info/chroot/chroot.go:75.2,75.22 1 1
+github.com/rhdedgar/container-info/chroot/chroot.go:64.16,67.3 2 0
+github.com/rhdedgar/container-info/chroot/chroot.go:69.48,73.3 3 0
+github.com/rhdedgar/container-info/chroot/chroot.go:75.22,77.38 2 0
+github.com/rhdedgar/container-info/chroot/chroot.go:81.3,81.29 1 0
+github.com/rhdedgar/container-info/chroot/chroot.go:77.38,80.4 2 0
+github.com/rhdedgar/container-info/chroot/chroot.go:85.13,86.67 1 1
+github.com/rhdedgar/container-info/chroot/chroot.go:86.67,89.3 2 1

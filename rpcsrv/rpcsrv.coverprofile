@@ -1,0 +1,8 @@
+mode: atomic
+github.com/rhdedgar/container-info/rpcsrv/rpcsrv.go:20.77,28.2 3 0
+github.com/rhdedgar/container-info/rpcsrv/rpcsrv.go:31.72,39.2 3 0
+github.com/rhdedgar/container-info/rpcsrv/rpcsrv.go:42.26,44.43 1 1
+github.com/rhdedgar/container-info/rpcsrv/rpcsrv.go:48.2,54.14 5 1
+github.com/rhdedgar/container-info/rpcsrv/rpcsrv.go:59.2,59.20 1 1
+github.com/rhdedgar/container-info/rpcsrv/rpcsrv.go:44.43,46.3 1 0
+github.com/rhdedgar/container-info/rpcsrv/rpcsrv.go:54.14,56.3 1 0
