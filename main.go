@@ -18,6 +18,6 @@ func main() {
 	// Give the server time to start locally before launching chroot functions.
 	time.Sleep(5 * time.Second)
 
-	// Wait for container IDs, gather info about the container, and return it.
-	chroot.SysCmd(models.ChrootChan, models.RuncChan)
+	// Wait for RPC calls, gather info about containers, and return it to the caller.
+	chroot.SysCmd(models.ChrootChan, models.RuncChan, models.ContainersChan)
 }

@@ -38,6 +38,17 @@ func (g InfoSrv) GetRuncInfo(containerID *string, reply *[]byte) error {
 	return nil
 }
 
+// GetContainers is the RPC-exported method that returns a list of running containers from crictl.
+func (g InfoSrv) GetContainers(reply *[]byte) error {
+	//fmt.Println("Getting running container info)
+
+	channels.SetStringChan(models.ContainersChan, "running")
+	*reply = <-models.ContainersOut
+
+	//fmt.Println("runc reply result was:", string((*reply)[:]))
+	return nil
+}
+
 // RPCSrv listens for container UIDs and returns info about that container.
 func RPCSrv(sock string) {
 	// Start by cleaning up any leftover sockets of the same name.

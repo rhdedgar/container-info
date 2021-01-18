@@ -17,7 +17,7 @@ var (
 
 // SysCmd waits for a container ID via channel input, and gathers information
 // about the container when it receives an ID.
-func SysCmd(cmdChan, runcChan <-chan string) {
+func SysCmd(cmdChan, runcChan, containersChan <-chan string) {
 	_, err := ChrootPath(os.Getenv("CHROOT_PATH"))
 	if err != nil {
 		fmt.Println("Error getting chroot on host due to: ", err)
@@ -54,6 +54,17 @@ func SysCmd(cmdChan, runcChan <-chan string) {
 			//runcStr := runOut.String()
 			//fmt.Println("runc state command output was", runcStr)
 			models.RuncOut <- runOut.Bytes()
+
+		case <-containersChan:
+			conCmd := exec.Command(Path, "ps", "-o", "json")
+
+			var conOut bytes.Buffer
+			conCmd.Stdout = &conOut
+
+			if conErr := conCmd.Run(); err != nil {
+				fmt.Println("Error listing running containers: ", conErr)
+			}
+			models.ContainersOut <- conOut.Bytes()
 		}
 	}
 }
