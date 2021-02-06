@@ -45,7 +45,6 @@ func (g InfoSrv) GetContainers(reply *[]byte) error {
 	channels.SetStringChan(models.ContainersChan, "running")
 	*reply = <-models.ContainersOut
 
-	//fmt.Println("runc reply result was:", string((*reply)[:]))
 	return nil
 }
 
