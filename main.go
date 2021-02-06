@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("container info server v0.0.6.")
+	fmt.Println("container info server v0.0.7.")
 
 	go rpcsrv.RPCSrv(config.Sock)
 
