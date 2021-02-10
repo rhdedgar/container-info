@@ -55,6 +55,9 @@ func SysCmd(cmdChan, runcChan, containersChan <-chan string) {
 			//fmt.Println("runc state command output was", runcStr)
 			models.RuncOut <- runOut.Bytes()
 
+			// Not going to use the minContainerAge value from containersChan in this ver.
+			// This may be replaced with a configurable datetime in the future.
+			// e.g. get containers older than minContainerAge.
 		case <-containersChan:
 			conCmd := exec.Command(Path, "ps", "-o", "json")
 
