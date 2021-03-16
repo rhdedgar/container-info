@@ -63,7 +63,7 @@ func RPCSrv(sock string) {
 
 	l, e := net.Listen("unix", sock)
 	if e != nil {
-		fmt.Println("Error starting listener:", e)
+		log.Fatal("Error starting listener:", e)
 	}
 
 	//fmt.Println("Starting container info server with address:", sock)

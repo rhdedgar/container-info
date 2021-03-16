@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
+	"time"
 
 	"github.com/rhdedgar/container-info/models"
 )
@@ -14,6 +15,46 @@ var (
 	// Path is the path to the container runtime interface utility
 	Path = "/usr/bin/crictl"
 )
+
+func inspectContainer(containerID string) ([]byte, error) {
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+
+	fmt.Println("running this: ", Path+" inspect "+containerID)
+	cmd := exec.Command(Path, "inspect", containerID)
+
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+
+	for i := 0; i <= 5; i++ {
+		if i >= 5 {
+			return out.Bytes(), fmt.Errorf("inspectContainer: Error inspecting container after multiple retries: %v\n", stderr.String())
+		}
+
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println("Error running inspect command: ", err, stderr.String())
+			continue
+		}
+
+		sStr := out.String()
+		sStderr := stderr.String()
+
+		fmt.Println("Command output was", sStr)
+		fmt.Println("Command stderr output was", sStderr)
+
+		if sStr != "" {
+			fmt.Println("Found container information.")
+			return out.Bytes(), nil
+		}
+
+		fmt.Println("inspectContainer output is empty.")
+		fmt.Println("inspectContainer: Error inspecting container, waiting a few seconds in case it just isn't available yet.")
+		time.Sleep(time.Duration(i) * time.Second)
+	}
+
+	return out.Bytes(), fmt.Errorf("inspectContainer could not return usable output for this container.\n")
+}
 
 // SysCmd waits for a container ID via channel input, and gathers information
 // about the container when it receives an ID.
@@ -26,22 +67,14 @@ func SysCmd(cmdChan, runcChan, containersChan <-chan string) {
 	for {
 		select {
 		case containerID := <-cmdChan:
-			//fmt.Println("running this: ", Path+" inspect "+containerID)
-			cmd := exec.Command(Path, "inspect", containerID)
-
-			var out bytes.Buffer
-			cmd.Stdout = &out
-
-			if cErr := cmd.Run(); err != nil {
-				fmt.Println("Error running inspect command: ", cErr)
+			result, err := inspectContainer(containerID)
+			if err != nil {
+				fmt.Println("Error returned from inspectContainer: ", err)
 			}
-
-			//sStr := out.String()
-			//fmt.Println("Command output was", sStr)
-			models.ChrootOut <- out.Bytes()
+			models.ChrootOut <- result
 
 		case scanContainer := <-runcChan:
-			//fmt.Println("running runc state command")
+			fmt.Println("running runc state command")
 			runCmd := exec.Command("/usr/bin/runc", "state", scanContainer)
 
 			var runOut bytes.Buffer
@@ -51,13 +84,13 @@ func SysCmd(cmdChan, runcChan, containersChan <-chan string) {
 				fmt.Println("Error running state command: ", runcErr)
 			}
 
-			//runcStr := runOut.String()
-			//fmt.Println("runc state command output was", runcStr)
+			runcStr := runOut.String()
+			fmt.Println("runc state command output was", runcStr)
 			models.RuncOut <- runOut.Bytes()
 
-			// Not going to use the minContainerAge value from containersChan in this ver.
-			// This may be replaced with a configurable datetime in the future.
-			// e.g. get containers older than minContainerAge.
+		// Not going to use the minContainerAge value from containersChan in this ver.
+		// This may be replaced with a configurable datetime in the future.
+		// e.g. get containers older than minContainerAge.
 		case <-containersChan:
 			conCmd := exec.Command(Path, "ps", "-o", "json")
 
