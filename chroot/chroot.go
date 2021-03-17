@@ -31,9 +31,12 @@ func inspectContainer(containerID string) ([]byte, error) {
 			return out.Bytes(), fmt.Errorf("inspectContainer: Error inspecting container after multiple retries: %v\n", stderr.String())
 		}
 
+		time.Sleep(time.Duration(i) * time.Second)
+
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println("Error running inspect command: ", err, stderr.String())
+			fmt.Println("inspectContainer: Error inspecting container, waiting a few seconds in case it just isn't available yet.")
 			continue
 		}
 
@@ -43,17 +46,20 @@ func inspectContainer(containerID string) ([]byte, error) {
 		fmt.Println("Command output was", sStr)
 		fmt.Println("Command stderr output was", sStderr)
 
+		if sStderr != "" {
+			fmt.Println("stderr was returned from the command: ", sStderr)
+			fmt.Println("inspectContainer: Error inspecting container, waiting a few seconds in case it just isn't available yet.")
+			continue
+		}
+		fmt.Println("inspectContainer output is empty.")
+
 		if sStr != "" {
-			fmt.Println("Found container information.")
+			fmt.Println("Found container information; returning.")
 			return out.Bytes(), nil
 		}
-
-		fmt.Println("inspectContainer output is empty.")
-		fmt.Println("inspectContainer: Error inspecting container, waiting a few seconds in case it just isn't available yet.")
-		time.Sleep(time.Duration(i) * time.Second)
 	}
 
-	return out.Bytes(), fmt.Errorf("inspectContainer could not return usable output for this container.\n")
+	return out.Bytes(), fmt.Errorf("inspectContainer could not return data for this container.\n")
 }
 
 // SysCmd waits for a container ID via channel input, and gathers information
