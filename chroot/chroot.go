@@ -43,7 +43,7 @@ func inspectContainer(containerID string) ([]byte, error) {
 		sStr := out.String()
 		sStderr := stderr.String()
 
-		fmt.Println("Command output was", sStr)
+		//fmt.Println("Command output was", sStr)
 		fmt.Println("Command stderr output was", sStderr)
 
 		if sStderr != "" {
@@ -90,8 +90,8 @@ func SysCmd(cmdChan, runcChan, containersChan <-chan string) {
 				fmt.Println("Error running state command: ", runcErr)
 			}
 
-			runcStr := runOut.String()
-			fmt.Println("runc state command output was", runcStr)
+			//runcStr := runOut.String()
+			//fmt.Println("runc state command output was", runcStr)
 			models.RuncOut <- runOut.Bytes()
 
 		// Not going to use the minContainerAge value from containersChan in this ver.

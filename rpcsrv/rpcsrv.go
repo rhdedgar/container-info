@@ -49,7 +49,7 @@ func (g InfoSrv) GetContainers(minContainerAge string, reply *[]byte) error {
 	channels.SetStringChan(models.ContainersChan, minContainerAge)
 	*reply = <-models.ContainersOut
 
-	fmt.Println("GetContainers crictl reply result was:", string((*reply)[:]))
+	//fmt.Println("GetContainers crictl reply result was:", string((*reply)[:]))
 	return nil
 }
 
