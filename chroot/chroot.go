@@ -51,12 +51,12 @@ func inspectContainer(containerID string) ([]byte, error) {
 			fmt.Println("inspectContainer: Error inspecting container, waiting a few seconds in case it just isn't available yet.")
 			continue
 		}
-		fmt.Println("inspectContainer output is empty.")
 
 		if sStr != "" {
 			fmt.Println("Found container information; returning.")
 			return out.Bytes(), nil
 		}
+		fmt.Println("inspectContainer output is empty.")
 	}
 
 	return out.Bytes(), fmt.Errorf("inspectContainer could not return data for this container.\n")

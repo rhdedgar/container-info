@@ -23,7 +23,11 @@ func (g InfoSrv) GetContainerInfo(containerID *string, reply *[]byte) error {
 	channels.SetStringChan(models.ChrootChan, *containerID)
 	*reply = <-models.ChrootOut
 
-	fmt.Println("crictl reply result was:", string((*reply)[:]))
+	//fmt.Println("crictl reply result was:", string((*reply)[:]))
+	resultSample := string((*reply)[:])
+	if len(resultSample) > 32 {
+		fmt.Println(resultSample[:32])
+	}
 	return nil
 }
 
