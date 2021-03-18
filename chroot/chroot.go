@@ -35,7 +35,8 @@ func inspectContainer(containerID string) ([]byte, error) {
 
 		err := cmd.Run()
 		if err != nil {
-			fmt.Println("Error running inspect command: ", err, stderr.String())
+			fmt.Println("Error running inspect command: ", err)
+			fmt.Println("Stderr output was: ", stderr.String())
 			fmt.Println("inspectContainer: Error inspecting container, waiting a few seconds in case it just isn't available yet.")
 			continue
 		}
