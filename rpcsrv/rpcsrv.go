@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"net/http"
 	"net/rpc"
 	"os"
 
@@ -63,7 +62,7 @@ func RPCSrv(sock string) {
 	InfoSrv := new(InfoSrv)
 
 	rpc.Register(InfoSrv)
-	rpc.HandleHTTP()
+	//rpc.HandleHTTP()
 
 	l, e := net.Listen("unix", sock)
 	if e != nil {
@@ -71,5 +70,14 @@ func RPCSrv(sock string) {
 	}
 
 	//fmt.Println("Starting container info server with address:", sock)
-	http.Serve(l, nil)
+	//http.Serve(l, nil)
+
+	for {
+		conn, err := l.Accept()
+		if err != nil {
+			fmt.Println("Error accepting connection: ", err)
+			continue
+		}
+		go rpc.ServeConn(conn)
+	}
 }
